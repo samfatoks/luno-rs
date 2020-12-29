@@ -1,23 +1,23 @@
-
 use std::time::Duration;
 
+use crate::domain::{
+    AccountBalance, GetBalancesResponse, GetTickerResponse, ListOrdersResponse, Order,
+};
 use crate::{credential::Credential, error::Error, http::Http};
-use crate::domain::{GetBalanceResponse, AccountBalance, ListOrdersResponse, Order, GetTickerResponse};
-
 
 pub struct LunoClientBuilder {
     credential: Credential,
     timeout: Duration,
-    enable_debug_middleware: bool
+    enable_debug_middleware: bool,
 }
 
 impl LunoClientBuilder {
-    pub fn new(key_id: String, secret: String) -> Self {
-        let credential = Credential::new(key_id, secret);
+    pub fn new(api_id: String, api_secret: String) -> Self {
+        let credential = Credential::new(api_id, api_secret);
         LunoClientBuilder {
             credential,
             timeout: Duration::from_millis(60000),
-            enable_debug_middleware: false
+            enable_debug_middleware: false,
         }
     }
 
@@ -37,33 +37,36 @@ impl LunoClientBuilder {
 }
 
 pub struct LunoClient {
-    pub http: Http,
+    http: Http,
 }
 
 impl LunoClient {
-    pub fn new(key_id: String, secret: String) -> Result<Self, Error> {
-        let http = Http::new(key_id, secret)?;
-        let client = LunoClient {
-            http
-        };
+    pub fn new(api_id: String, api_secret: String) -> Result<Self, Error> {
+        let http = Http::new(api_id, api_secret)?;
+        let client = LunoClient { http };
         Ok(client)
     }
 
-    fn new_with_features(credential: Credential, timeout: Duration, enable_debug_middleware: bool) -> Result<Self, Error> {
+    fn new_with_features(
+        credential: Credential,
+        timeout: Duration,
+        enable_debug_middleware: bool,
+    ) -> Result<Self, Error> {
         let http = Http::new_with_features(credential, timeout, enable_debug_middleware)?;
-        let client = LunoClient {
-            http
-        };
+        let client = LunoClient { http };
         Ok(client)
     }
 
     pub async fn get_balances(&self) -> Result<Vec<AccountBalance>, Error> {
-        let response: GetBalanceResponse = self.http.process_request("/api/1/balance").await?;
+        let response: GetBalancesResponse = self.http.process_request("/api/1/balance").await?;
         Ok(response.balances)
     }
 
     pub async fn list_orders(&self) -> Result<Vec<Order>, Error> {
-        let response: ListOrdersResponse = self.http.process_request("/api/1/listorders?state=PENDING").await?;
+        let response: ListOrdersResponse = self
+            .http
+            .process_request("/api/1/listorders?state=PENDING")
+            .await?;
         Ok(response.orders)
     }
 
@@ -73,9 +76,10 @@ impl LunoClient {
     // }
 
     pub async fn get_ticker(&self) -> Result<GetTickerResponse, Error> {
-        let response: GetTickerResponse = self.http.process_request("/api/1/ticker?pair=XBTNGN").await?;
+        let response: GetTickerResponse = self
+            .http
+            .process_request("/api/1/ticker?pair=XBTNGN")
+            .await?;
         Ok(response)
     }
-    
-
 }

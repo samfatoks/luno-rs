@@ -9,5 +9,5 @@ pub struct MarketsInfo {
 
 #[derive(Deserialize)]
 pub struct GetMarketsInfoResponse {
-    pub markets: Vec<MarketsInfo>
+    pub markets: Vec<MarketsInfo>,
 }

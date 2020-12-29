@@ -1,6 +1,6 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Order {
     pub order_id: String,
     pub creation_timestamp: i64,
@@ -15,10 +15,10 @@ pub struct Order {
     pub counter: String,
     pub fee_base: String,
     pub fee_counter: String,
-    pub pair: String
+    pub pair: String,
 }
 
 #[derive(Deserialize)]
 pub struct ListOrdersResponse {
-    pub orders: Vec<Order>
+    pub orders: Vec<Order>,
 }

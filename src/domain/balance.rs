@@ -1,6 +1,6 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct AccountBalance {
     pub account_id: String,
     pub asset: String,
@@ -10,7 +10,7 @@ pub struct AccountBalance {
 }
 
 #[derive(Deserialize)]
-pub struct GetBalanceResponse {
+pub struct GetBalancesResponse {
     #[serde(rename = "balance")]
-    pub balances: Vec<AccountBalance>
+    pub balances: Vec<AccountBalance>,
 }

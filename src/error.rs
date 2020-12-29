@@ -1,18 +1,16 @@
-
 #![allow(unreachable_patterns)]
 
-use std::fmt;
 use async_std::future::TimeoutError;
-use url::ParseError;
 use serde::Deserialize;
 use std::collections::HashMap;
-
+use std::fmt;
+use url::ParseError;
 
 #[derive(Debug, Deserialize)]
 pub struct LunoError {
     pub error: String,
     pub error_code: String,
-    pub error_action: HashMap<String, String>
+    pub error_action: HashMap<String, String>,
 }
 
 #[derive(Debug)]
@@ -20,7 +18,7 @@ pub enum Error {
     UrlParseError(String),
     SurfError(String),
     TimeoutError(String),
-    ApiError(LunoError)
+    ApiError(LunoError),
 }
 
 impl fmt::Display for Error {
