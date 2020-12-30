@@ -133,6 +133,7 @@ impl LunoClient {
         Ok(response.trades)
     }
 
+    /// List trades since duration ago
     pub async fn list_trades_since(
         &self,
         currency_pair: CurrencyPair,
