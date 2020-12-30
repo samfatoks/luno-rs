@@ -3,6 +3,8 @@ rust:
   - stable
   - beta
   - nightly
-matrix:
+jobs:
   allow_failures:
     - rust: nightly
+  fast_finish: true
+cache: cargo
