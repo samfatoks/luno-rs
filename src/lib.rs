@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 #[macro_use]
 extern crate log;
 
@@ -9,18 +11,8 @@ mod luno_client;
 mod middleware;
 
 pub use domain::{
-    AccountBalance, GetBalancesResponse, GetTickerResponse, ListOrdersResponse, Order,
+    AccountBalance, CurrencyPair, GetBalancesResponse, GetTickersResponse, ListOrdersResponse,
+    Order, OrderBook, OrderBookEntry, OrderType, Ticker, Trade, Trades,
 };
 pub use error::{Error, LunoError};
 pub use luno_client::{LunoClient, LunoClientBuilder};
-
-#[cfg(test)]
-mod tests {
-    //use crate::LunoClient;
-
-    #[test]
-    fn it_works() {
-        //let client = LunoClient::new("demo".to_string(), "password".to_string()).unwrap();
-        assert_eq!(2 + 2, 4);
-    }
-}

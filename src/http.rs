@@ -38,7 +38,10 @@ impl Http {
         Ok(http)
     }
 
-    pub async fn process_request<T: DeserializeOwned>(&self, path: &str) -> Result<T, Error> {
+    pub async fn process_request<T: DeserializeOwned, S: AsRef<str>>(
+        &self,
+        path: S,
+    ) -> Result<T, Error> {
         let request = self
             .client
             .get(path)

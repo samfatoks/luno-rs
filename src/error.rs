@@ -19,6 +19,8 @@ pub enum Error {
     SurfError(String),
     TimeoutError(String),
     ApiError(LunoError),
+    InvalidCurrencyPair(String),
+    InvalidOrderType(String),
 }
 
 impl fmt::Display for Error {
@@ -28,6 +30,12 @@ impl fmt::Display for Error {
             Error::SurfError(message) => write!(f, "Surf Error: {}", message),
             Error::TimeoutError(message) => write!(f, "Timeout Error: {}", message),
             Error::ApiError(error) => write!(f, "{}: {}", error.error_code, error.error),
+            Error::InvalidCurrencyPair(str) => {
+                write!(f, "Cannot convert {} to any currency pair", str)
+            }
+            Error::InvalidOrderType(str) => {
+                write!(f, "Cannot convert {} to any order type", str)
+            }
             _ => write!(f, "Unable to process request at this time"),
         }
     }
