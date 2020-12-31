@@ -19,7 +19,7 @@
 //! __LunoClient__
 //!
 //! ```no_run
-//! use luno_rs::LunoClient;
+//! use luno::LunoClient;
 //! use std::env;
 //!
 //! #[async_std::main]
@@ -38,7 +38,7 @@
 //! __LunoClientBuilder__
 //!
 //! ```no_run
-//! use luno_rs::{LunoClientBuilder, CurrencyPair};
+//! use luno::{LunoClientBuilder, CurrencyPair};
 //! use std::env;
 //!
 //! #[async_std::main]
@@ -68,8 +68,7 @@ mod luno_client;
 mod middleware;
 
 pub use domain::{
-    AccountBalance, CurrencyPair, ListBalancesResponse, ListOrdersResponse, ListTickersResponse,
-    ListTradesResponse, Order, OrderBook, OrderBookEntry, OrderType, Ticker, Trade,
+    AccountBalance, CurrencyPair, Order, OrderBook, OrderBookEntry, OrderType, Ticker, Trade,
 };
 pub use error::{Error, LunoError};
 pub use luno_client::{LunoClient, LunoClientBuilder};

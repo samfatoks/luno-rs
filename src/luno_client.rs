@@ -1,6 +1,11 @@
 use crate::{
-    credential::Credential, http::Http, AccountBalance, CurrencyPair, Error, ListBalancesResponse,
-    ListOrdersResponse, ListTickersResponse, ListTradesResponse, Order, OrderBook, Ticker, Trade,
+    credential::Credential,
+    domain::{
+        AccountBalance, CurrencyPair, ListBalancesResponse, ListOrdersResponse,
+        ListTickersResponse, ListTradesResponse, Order, OrderBook, Ticker, Trade,
+    },
+    error::Error,
+    http::Http,
 };
 use async_std::task;
 use chrono::{DateTime, Utc};
@@ -129,6 +134,29 @@ impl LunoClient {
     }
 
     /// List the most recent Trades for the specified currency pair in the last 24 hours. At most 100 results are returned per call.
+    ///
+    /// # Example
+    /// ```no_run
+    /// use luno::{LunoClient, CurrencyPair};
+    /// use std::env;
+    ///
+    /// # #[async_std::main]
+    /// # async fn main() {
+    /// #    let api_id = env::var("LUNO_API_ID").unwrap();
+    /// #    let api_secret = env::var("LUNO_API_SECRET").unwrap();
+    /// let client = LunoClient::new(api_id, api_secret).unwrap();
+    /// let trades = client
+    ///     .list_trades(CurrencyPair::XBTNGN)
+    ///     .await
+    ///     .unwrap();
+    /// for (i, trade) in trades.iter().enumerate() {
+    ///     println!(
+    ///         "{} :: {} -> Type: {}, Price: {} Volume: {}",
+    ///         i, trade.timestamp, trade.order_type, trade.price, trade.volume
+    ///     );
+    /// }
+    /// # }
+    /// ```
     pub async fn list_trades(&self, currency_pair: CurrencyPair) -> Result<Vec<Trade>, Error> {
         let path = format!("/api/1/trades?pair={}", currency_pair);
         let response: ListTradesResponse = self.http.process_request(path).await?;
@@ -136,6 +164,29 @@ impl LunoClient {
     }
 
     /// List trades since duration ago
+    ///
+    /// # Example
+    /// ```no_run
+    /// use luno::{LunoClient, CurrencyPair};
+    /// use std::{env, time::Duration};
+    ///
+    /// # #[async_std::main]
+    /// # async fn main() {
+    /// #    let api_id = env::var("LUNO_API_ID").unwrap();
+    /// #    let api_secret = env::var("LUNO_API_SECRET").unwrap();
+    /// let client = LunoClient::new(api_id, api_secret).unwrap();
+    /// let trades = client
+    ///     .list_trades_since(CurrencyPair::XBTNGN, Duration::from_secs(20))
+    ///     .await
+    ///     .unwrap();
+    /// for (i, trade) in trades.iter().enumerate() {
+    ///     println!(
+    ///         "{} :: {} -> Type: {}, Price: {} Volume: {}",
+    ///         i, trade.timestamp, trade.order_type, trade.price, trade.volume
+    ///     );
+    /// }
+    /// # }
+    /// ```
     pub async fn list_trades_since(
         &self,
         currency_pair: CurrencyPair,

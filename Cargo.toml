@@ -1,5 +1,5 @@
 [package]
-name = "luno-rs"
+name = "luno"
 version = "0.1.0"
 description = "Rust wrapper for Luno API"
 authors = ["Samuel Fatoki <samfatoks@gmail.com>"]
