@@ -16,10 +16,10 @@
 //!
 //! ### Example usage
 //!
-//! __LunoClient__
+//! __Using Client__
 //!
 //! ```no_run
-//! use luno_rs::LunoClient;
+//! use luno::Client;
 //! use std::env;
 //!
 //! #[async_std::main]
@@ -27,7 +27,7 @@
 //!     let api_id = env::var("LUNO_API_ID").unwrap();
 //!     let api_secret = env::var("LUNO_API_SECRET").unwrap();
 //!
-//!     let client = LunoClient::new(api_id, api_secret).unwrap();
+//!     let client = Client::new(api_id, api_secret).unwrap();
 //!     let balances = client.list_balances().await.unwrap();
 //!     for balance in balances {
 //!         println!("{} -> Balance: {}, Reserved: {}", balance.asset, balance.balance, balance.reserved);
@@ -35,10 +35,10 @@
 //! }
 //! ```
 //!
-//! __LunoClientBuilder__
+//! __Using ClientBuilder__
 //!
 //! ```no_run
-//! use luno_rs::{LunoClientBuilder, CurrencyPair};
+//! use luno::{ClientBuilder, CurrencyPair};
 //! use std::env;
 //!
 //! #[async_std::main]
@@ -46,7 +46,7 @@
 //!     let api_id = env::var("LUNO_API_ID").unwrap();
 //!     let api_secret = env::var("LUNO_API_SECRET").unwrap();
 //!
-//!     let client = LunoClientBuilder::new(api_id, api_secret)
+//!     let client = ClientBuilder::new(api_id, api_secret)
 //!         .with_timeout(30000)
 //!         .with_request_logger()
 //!         .build()
@@ -60,16 +60,15 @@
 #[macro_use]
 extern crate log;
 
+mod client;
 mod credential;
 mod domain;
 mod error;
 mod http;
-mod luno_client;
 mod middleware;
 
+pub use client::{Client, ClientBuilder};
 pub use domain::{
-    AccountBalance, CurrencyPair, ListBalancesResponse, ListOrdersResponse, ListTickersResponse,
-    ListTradesResponse, Order, OrderBook, OrderBookEntry, OrderType, Ticker, Trade,
+    AccountBalance, CurrencyPair, Order, OrderBook, OrderBookEntry, OrderType, Ticker, Trade,
 };
 pub use error::{Error, LunoError};
-pub use luno_client::{LunoClient, LunoClientBuilder};

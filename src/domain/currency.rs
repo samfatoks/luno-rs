@@ -5,13 +5,13 @@ use std::{fmt, str};
 /// # Examples
 ///
 /// ```
-/// use luno_rs::CurrencyPair;
+/// use luno::CurrencyPair;
 /// let currency_pair = CurrencyPair::default();
 /// assert_eq!(currency_pair, CurrencyPair::XBTNGN);
 /// ```
 /// Strings can also be converted to CurrencyPair easily.
 /// ```
-/// use luno_rs::CurrencyPair;
+/// use luno::CurrencyPair;
 /// let currency_pair: CurrencyPair = "ETHNGN".parse().unwrap();
 /// assert_eq!(currency_pair, CurrencyPair::ETHNGN);
 /// ```

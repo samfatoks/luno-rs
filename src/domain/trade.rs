@@ -1,5 +1,5 @@
 use super::convert_is_buy_to_order_type;
-use crate::OrderType;
+use crate::domain::OrderType;
 use chrono::serde::ts_milliseconds;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};

@@ -1,23 +1,28 @@
 use crate::{
-    credential::Credential, http::Http, AccountBalance, CurrencyPair, Error, ListBalancesResponse,
-    ListOrdersResponse, ListTickersResponse, ListTradesResponse, Order, OrderBook, Ticker, Trade,
+    credential::Credential,
+    domain::{
+        AccountBalance, CurrencyPair, ListBalancesResponse, ListOrdersResponse,
+        ListTickersResponse, ListTradesResponse, Order, OrderBook, Ticker, Trade,
+    },
+    error::Error,
+    http::Http,
 };
 use async_std::task;
 use chrono::{DateTime, Utc};
 use futures_util::{stream, StreamExt};
 use std::sync::Arc;
 use std::time::Duration;
-pub struct LunoClientBuilder {
+pub struct ClientBuilder {
     credential: Credential,
     timeout: Duration,
     enable_logger_middleware: bool,
 }
 
-impl LunoClientBuilder {
-    /// Create a new LunoClientBuilder
+impl ClientBuilder {
+    /// Create a new ClientBuilder
     pub fn new(api_id: String, api_secret: String) -> Self {
         let credential = Credential::new(api_id, api_secret);
-        LunoClientBuilder {
+        ClientBuilder {
             credential,
             timeout: Duration::from_millis(60000),
             enable_logger_middleware: false,
@@ -36,21 +41,21 @@ impl LunoClientBuilder {
         self
     }
 
-    /// Build LunoClientBuilder into a LunoClient
-    pub fn build(self) -> Result<LunoClient, Error> {
-        LunoClient::new_with_features(self.credential, self.timeout, self.enable_logger_middleware)
+    /// Build ClientBuilder into a Client
+    pub fn build(self) -> Result<Client, Error> {
+        Client::new_with_features(self.credential, self.timeout, self.enable_logger_middleware)
     }
 }
 
-pub struct LunoClient {
+pub struct Client {
     http: Arc<Http>,
 }
 
-impl LunoClient {
-    /// Create a new LunoClient
+impl Client {
+    /// Create a new Client
     pub fn new(api_id: String, api_secret: String) -> Result<Self, Error> {
         let http = Http::new(api_id, api_secret)?;
-        let client = LunoClient {
+        let client = Client {
             http: Arc::new(http),
         };
         Ok(client)
@@ -62,7 +67,7 @@ impl LunoClient {
         enable_logger_middleware: bool,
     ) -> Result<Self, Error> {
         let http = Http::new_with_features(credential, timeout, enable_logger_middleware)?;
-        let client = LunoClient {
+        let client = Client {
             http: Arc::new(http),
         };
         Ok(client)
@@ -129,6 +134,29 @@ impl LunoClient {
     }
 
     /// List the most recent Trades for the specified currency pair in the last 24 hours. At most 100 results are returned per call.
+    ///
+    /// # Example
+    /// ```no_run
+    /// use luno::{Client, CurrencyPair};
+    /// use std::env;
+    ///
+    /// # #[async_std::main]
+    /// # async fn main() {
+    /// #    let api_id = env::var("LUNO_API_ID").unwrap();
+    /// #    let api_secret = env::var("LUNO_API_SECRET").unwrap();
+    /// let client = Client::new(api_id, api_secret).unwrap();
+    /// let trades = client
+    ///     .list_trades(CurrencyPair::XBTNGN)
+    ///     .await
+    ///     .unwrap();
+    /// for (i, trade) in trades.iter().enumerate() {
+    ///     println!(
+    ///         "{} :: {} -> Type: {}, Price: {} Volume: {}",
+    ///         i, trade.timestamp, trade.order_type, trade.price, trade.volume
+    ///     );
+    /// }
+    /// # }
+    /// ```
     pub async fn list_trades(&self, currency_pair: CurrencyPair) -> Result<Vec<Trade>, Error> {
         let path = format!("/api/1/trades?pair={}", currency_pair);
         let response: ListTradesResponse = self.http.process_request(path).await?;
@@ -136,6 +164,29 @@ impl LunoClient {
     }
 
     /// List trades since duration ago
+    ///
+    /// # Example
+    /// ```no_run
+    /// use luno::{Client, CurrencyPair};
+    /// use std::{env, time::Duration};
+    ///
+    /// # #[async_std::main]
+    /// # async fn main() {
+    /// #    let api_id = env::var("LUNO_API_ID").unwrap();
+    /// #    let api_secret = env::var("LUNO_API_SECRET").unwrap();
+    /// let client = Client::new(api_id, api_secret).unwrap();
+    /// let trades = client
+    ///     .list_trades_since(CurrencyPair::XBTNGN, Duration::from_secs(20))
+    ///     .await
+    ///     .unwrap();
+    /// for (i, trade) in trades.iter().enumerate() {
+    ///     println!(
+    ///         "{} :: {} -> Type: {}, Price: {} Volume: {}",
+    ///         i, trade.timestamp, trade.order_type, trade.price, trade.volume
+    ///     );
+    /// }
+    /// # }
+    /// ```
     pub async fn list_trades_since(
         &self,
         currency_pair: CurrencyPair,
