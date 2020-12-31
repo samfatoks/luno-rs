@@ -22,10 +22,10 @@ impl Http {
     pub fn new_with_features(
         credential: Credential,
         timeout: Duration,
-        enable_debug_middleware: bool,
+        enable_logger_middleware: bool,
     ) -> Result<Self, Error> {
         let mut client = surf::client();
-        if enable_debug_middleware {
+        if enable_logger_middleware {
             client = client.with(Logger);
         }
 

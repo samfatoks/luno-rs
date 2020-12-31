@@ -4,14 +4,14 @@ mod market;
 mod order;
 mod ticker;
 mod trade;
-pub use balance::{AccountBalance, GetBalancesResponse};
+pub use balance::{AccountBalance, ListBalancesResponse};
 pub use currency::CurrencyPair;
 pub use market::{GetMarketsInfoResponse, MarketsInfo};
 pub use order::{ListOrdersResponse, Order, OrderBook, OrderBookEntry, OrderType};
 use serde::{self, de};
 use std::fmt;
-pub use ticker::{GetTickersResponse, Ticker};
-pub use trade::{Trade, Trades};
+pub use ticker::{ListTickersResponse, Ticker};
+pub use trade::{ListTradesResponse, Trade};
 
 struct OrderTypeVisitor;
 pub fn convert_is_buy_to_order_type<'de, D>(d: D) -> Result<OrderType, D::Error>

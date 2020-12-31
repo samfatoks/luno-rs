@@ -3,9 +3,9 @@
 [docsrs-image]: https://docs.rs/luno/badge.svg
 [docsrs]: https://docs.rs/luno
 
-# [Luno][docsrs] [![Chrono on crates.io][cratesio-image]][cratesio] [![Chrono on docs.rs][docsrs-image]][docsrs] [![Build Status](https://travis-ci.org/samfatoks/luno-rs.svg?branch=master)](https://travis-ci.org/samatoks/luno-rs)
+# [Luno][docsrs] [![Chrono on crates.io][cratesio-image]][cratesio] [![Chrono on docs.rs][docsrs-image]][docsrs] [![Build Status](https://travis-ci.com/samfatoks/luno-rs.svg?branch=main)](https://travis-ci.com/samfatoks/luno-rs)
 
-This Rust library provides a wrapper for the [Luno API](https://www.luno.com/api).
+Rust wrapper for [Luno API](https://www.luno.com/api).
 
 ## Authentication
 
@@ -47,14 +47,14 @@ async fn main() {
 }
 ```
 
-Remember to substitute `<id>` and `<secret>` for your own Id and Secret.
-
-We recommend using environment variables rather than including your credentials in plaintext. In Bash you do so as follows:
+We recommend using environment variables rather than including your credentials in plaintext. Run the following in Bash to export Key ID and Secret:
 
 ```
 $ export LUNO_API_ID="<id>"
 $ export LUNO_API_SECRET="<secret>"
 ```
+
+Remember to substitute `<id>` and `<secret>` with your own Key Id and Secret.
 
 ## License
 

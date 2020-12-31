@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::{fmt, str};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum OrderType {
     BID,
     ASK,
@@ -30,7 +30,7 @@ impl str::FromStr for OrderType {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Order {
     pub order_id: String,
     #[serde(with = "ts_milliseconds")]
