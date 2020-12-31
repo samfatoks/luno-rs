@@ -12,17 +12,17 @@ use chrono::{DateTime, Utc};
 use futures_util::{stream, StreamExt};
 use std::sync::Arc;
 use std::time::Duration;
-pub struct ClientBuilder {
+pub struct LunoClientBuilder {
     credential: Credential,
     timeout: Duration,
     enable_logger_middleware: bool,
 }
 
-impl ClientBuilder {
-    /// Create a new ClientBuilder
-    pub fn new(api_id: String, api_secret: String) -> Self {
-        let credential = Credential::new(api_id, api_secret);
-        ClientBuilder {
+impl LunoClientBuilder {
+    /// Create a new LunoClientBuilder
+    pub fn new(key_id: String, key_secret: String) -> Self {
+        let credential = Credential::new(key_id, key_secret);
+        LunoClientBuilder {
             credential,
             timeout: Duration::from_millis(60000),
             enable_logger_middleware: false,
@@ -41,36 +41,34 @@ impl ClientBuilder {
         self
     }
 
-    /// Build ClientBuilder into a Client
-    pub fn build(self) -> Result<Client, Error> {
-        Client::new_with_features(self.credential, self.timeout, self.enable_logger_middleware)
+    /// Build LunoClientBuilder into a LunoClient
+    pub fn build(self) -> LunoClient {
+        LunoClient::new_with_features(self.credential, self.timeout, self.enable_logger_middleware)
     }
 }
 
-pub struct Client {
+pub struct LunoClient {
     http: Arc<Http>,
 }
 
-impl Client {
-    /// Create a new Client
-    pub fn new(api_id: String, api_secret: String) -> Result<Self, Error> {
-        let http = Http::new(api_id, api_secret)?;
-        let client = Client {
+impl LunoClient {
+    /// Create a new LunoClient
+    pub fn new<T: AsRef<str>>(key_id: T, key_secret: T) -> Self {
+        let http = Http::new(key_id.as_ref().into(), key_secret.as_ref().into());
+        LunoClient {
             http: Arc::new(http),
-        };
-        Ok(client)
+        }
     }
 
     fn new_with_features(
         credential: Credential,
         timeout: Duration,
         enable_logger_middleware: bool,
-    ) -> Result<Self, Error> {
-        let http = Http::new_with_features(credential, timeout, enable_logger_middleware)?;
-        let client = Client {
+    ) -> Self {
+        let http = Http::new_with_features(credential, timeout, enable_logger_middleware);
+        LunoClient {
             http: Arc::new(http),
-        };
-        Ok(client)
+        }
     }
 
     /// List the balances on all assets linked to Luno profile
@@ -137,14 +135,14 @@ impl Client {
     ///
     /// # Example
     /// ```no_run
-    /// use luno::{Client, CurrencyPair};
+    /// use luno_rs::{LunoClient, CurrencyPair};
     /// use std::env;
     ///
     /// # #[async_std::main]
     /// # async fn main() {
-    /// #    let api_id = env::var("LUNO_API_ID").unwrap();
-    /// #    let api_secret = env::var("LUNO_API_SECRET").unwrap();
-    /// let client = Client::new(api_id, api_secret).unwrap();
+    /// #    let key_id = env::var("LUNO_KEY_ID").unwrap();
+    /// #    let key_secret = env::var("LUNO_KEY_SECRET").unwrap();
+    /// let client = LunoClient::new(key_id, key_secret);
     /// let trades = client
     ///     .list_trades(CurrencyPair::XBTNGN)
     ///     .await
@@ -167,14 +165,14 @@ impl Client {
     ///
     /// # Example
     /// ```no_run
-    /// use luno::{Client, CurrencyPair};
+    /// use luno_rs::{LunoClient, CurrencyPair};
     /// use std::{env, time::Duration};
     ///
     /// # #[async_std::main]
     /// # async fn main() {
-    /// #    let api_id = env::var("LUNO_API_ID").unwrap();
-    /// #    let api_secret = env::var("LUNO_API_SECRET").unwrap();
-    /// let client = Client::new(api_id, api_secret).unwrap();
+    /// #    let key_id = env::var("LUNO_KEY_ID").unwrap();
+    /// #    let key_secret = env::var("LUNO_KEY_SECRET").unwrap();
+    /// let client = LunoClient::new(key_id, key_secret);
     /// let trades = client
     ///     .list_trades_since(CurrencyPair::XBTNGN, Duration::from_secs(20))
     ///     .await
