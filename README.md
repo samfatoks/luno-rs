@@ -1,9 +1,9 @@
-[cratesio-image]: https://img.shields.io/crates/v/luno.svg
-[cratesio]: https://crates.io/crates/luno
-[docsrs-image]: https://docs.rs/luno/badge.svg
-[docsrs]: https://docs.rs/luno
+[cratesio-image]: https://img.shields.io/crates/v/luno-rs.svg
+[cratesio]: https://crates.io/crates/luno-rs
+[docsrs-image]: https://docs.rs/luno-rs/badge.svg
+[docsrs]: https://docs.rs/luno-rs
 
-# [Luno][docsrs] [![Chrono on crates.io][cratesio-image]][cratesio] [![Chrono on docs.rs][docsrs-image]][docsrs] [![Build Status](https://travis-ci.com/samfatoks/luno-rs.svg?branch=main)](https://travis-ci.com/samfatoks/luno-rs)
+# [Luno][docsrs] [![luno-rs on crates.io][cratesio-image]][cratesio] [![luno-rs on docs.rs][docsrs-image]][docsrs] [![Build Status](https://travis-ci.com/samfatoks/luno-rs.svg?branch=main)](https://travis-ci.com/samfatoks/luno-rs)
 
 Rust wrapper for [Luno API](https://www.luno.com/api).
 
