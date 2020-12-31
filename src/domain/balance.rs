@@ -10,7 +10,7 @@ pub struct AccountBalance {
 }
 
 #[derive(Deserialize)]
-pub struct GetBalancesResponse {
+pub struct ListBalancesResponse {
     #[serde(rename = "balance")]
     pub balances: Vec<AccountBalance>,
 }

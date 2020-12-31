@@ -4,7 +4,7 @@ use chrono::serde::ts_milliseconds;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Trade {
     pub price: String,
     pub sequence: i64,
@@ -16,6 +16,6 @@ pub struct Trade {
 }
 
 #[derive(Deserialize, Serialize)]
-pub struct Trades {
+pub struct ListTradesResponse {
     pub trades: Vec<Trade>,
 }

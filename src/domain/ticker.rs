@@ -14,7 +14,7 @@ pub struct Ticker {
 }
 
 #[derive(Deserialize)]
-pub struct GetTickersResponse {
+pub struct ListTickersResponse {
     pub tickers: Vec<Ticker>,
 }
 

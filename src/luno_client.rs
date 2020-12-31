@@ -1,40 +1,44 @@
 use crate::{
-    credential::Credential, http::Http, AccountBalance, CurrencyPair, Error, GetBalancesResponse,
-    GetTickersResponse, ListOrdersResponse, Order, OrderBook, Ticker, Trade, Trades,
+    credential::Credential, http::Http, AccountBalance, CurrencyPair, Error, ListBalancesResponse,
+    ListOrdersResponse, ListTickersResponse, ListTradesResponse, Order, OrderBook, Ticker, Trade,
 };
 use async_std::task;
 use chrono::{DateTime, Utc};
-use futures_util::{stream, StreamExt}; //future::join_all,
+use futures_util::{stream, StreamExt};
 use std::sync::Arc;
 use std::time::Duration;
 pub struct LunoClientBuilder {
     credential: Credential,
     timeout: Duration,
-    enable_debug_middleware: bool,
+    enable_logger_middleware: bool,
 }
 
 impl LunoClientBuilder {
+    /// Create a new LunoClientBuilder
     pub fn new(api_id: String, api_secret: String) -> Self {
         let credential = Credential::new(api_id, api_secret);
         LunoClientBuilder {
             credential,
             timeout: Duration::from_millis(60000),
-            enable_debug_middleware: false,
+            enable_logger_middleware: false,
         }
     }
 
+    /// Add timeout in milliseconds
     pub fn with_timeout(mut self, timeout_ms: u64) -> Self {
         self.timeout = Duration::from_millis(timeout_ms);
         self
     }
 
-    pub fn with_debug_middleware(mut self) -> Self {
-        self.enable_debug_middleware = true;
+    /// Add request/response logger middleware
+    pub fn with_request_logger(mut self) -> Self {
+        self.enable_logger_middleware = true;
         self
     }
 
+    /// Build LunoClientBuilder into a LunoClient
     pub fn build(self) -> Result<LunoClient, Error> {
-        LunoClient::new_with_features(self.credential, self.timeout, self.enable_debug_middleware)
+        LunoClient::new_with_features(self.credential, self.timeout, self.enable_logger_middleware)
     }
 }
 
@@ -43,6 +47,7 @@ pub struct LunoClient {
 }
 
 impl LunoClient {
+    /// Create a new LunoClient
     pub fn new(api_id: String, api_secret: String) -> Result<Self, Error> {
         let http = Http::new(api_id, api_secret)?;
         let client = LunoClient {
@@ -54,20 +59,22 @@ impl LunoClient {
     fn new_with_features(
         credential: Credential,
         timeout: Duration,
-        enable_debug_middleware: bool,
+        enable_logger_middleware: bool,
     ) -> Result<Self, Error> {
-        let http = Http::new_with_features(credential, timeout, enable_debug_middleware)?;
+        let http = Http::new_with_features(credential, timeout, enable_logger_middleware)?;
         let client = LunoClient {
             http: Arc::new(http),
         };
         Ok(client)
     }
 
-    pub async fn get_balances(&self) -> Result<Vec<AccountBalance>, Error> {
-        let response: GetBalancesResponse = self.http.process_request("/api/1/balance").await?;
+    /// List the balances on all assets linked to Luno profile
+    pub async fn list_balances(&self) -> Result<Vec<AccountBalance>, Error> {
+        let response: ListBalancesResponse = self.http.process_request("/api/1/balance").await?;
         Ok(response.balances)
     }
 
+    /// List all orders on Luno profile
     pub async fn list_orders(&self) -> Result<Vec<Order>, Error> {
         let response: ListOrdersResponse = self
             .http
@@ -76,11 +83,6 @@ impl LunoClient {
         Ok(response.orders)
     }
 
-    // pub async fn get_markets_info(&self) -> Result<Vec<MarketsInfo>, Error> {
-    //     let response: GetMarketsInfoResponse = self.process_request("/api/exchange/1/markets").await?;
-    //     Ok(response.markets)
-    // }
-
     /// Get ticker for currency pair
     pub async fn get_ticker(&self, currency_pair: CurrencyPair) -> Result<Ticker, Error> {
         let path = format!("/api/1/ticker?pair={}", currency_pair);
@@ -88,14 +90,14 @@ impl LunoClient {
         Ok(response)
     }
 
-    /// Get tickers for all currency pairs
-    pub async fn get_tickers(&self) -> Result<Vec<Ticker>, Error> {
-        let response: GetTickersResponse = self.http.process_request("/api/1/tickers").await?;
+    /// List tickers for all currency pairs
+    pub async fn list_tickers(&self) -> Result<Vec<Ticker>, Error> {
+        let response: ListTickersResponse = self.http.process_request("/api/1/tickers").await?;
         Ok(response.tickers)
     }
 
-    /// Get tickers for specific currency pairs
-    pub async fn get_tickers_for_currency_pairs(
+    /// List tickers for specific currency pairs
+    pub async fn list_tickers_for_currency_pairs(
         &self,
         currency_pairs: Vec<CurrencyPair>,
     ) -> Result<Vec<Ticker>, Error> {
@@ -126,10 +128,10 @@ impl LunoClient {
         Ok(response)
     }
 
-    /// Returns a list of the most recent Trades for the specified currency pair in the last 24 hours. At most 100 results are returned per call.
+    /// List the most recent Trades for the specified currency pair in the last 24 hours. At most 100 results are returned per call.
     pub async fn list_trades(&self, currency_pair: CurrencyPair) -> Result<Vec<Trade>, Error> {
         let path = format!("/api/1/trades?pair={}", currency_pair);
-        let response: Trades = self.http.process_request(path).await?;
+        let response: ListTradesResponse = self.http.process_request(path).await?;
         Ok(response.trades)
     }
 
@@ -142,20 +144,7 @@ impl LunoClient {
         let now: DateTime<Utc> = Utc::now();
         let since = now.timestamp_millis() - duration.as_millis() as i64;
         let path = format!("/api/1/trades?pair={}&since={}", currency_pair, since);
-        let response: Trades = self.http.process_request(path).await?;
+        let response: ListTradesResponse = self.http.process_request(path).await?;
         Ok(response.trades)
     }
-
-    // pub async fn get_tickers2(
-    //     &self,
-    //     currency_pairs: Vec<CurrencyPair>,
-    // ) -> Result<Vec<GetTickerResponse>, Error> {
-    //     let responses = join_all(currency_pairs.into_iter().map(|cp| async move {
-    //         self.http
-    //             .process_request(format!("/api/1/ticker?pair={}", cp))
-    //             .await
-    //     }))
-    //     .await;
-    //     Ok(responses.into_iter().filter_map(Result::ok).collect())
-    // }
 }
