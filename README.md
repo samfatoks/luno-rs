@@ -26,9 +26,6 @@ luno = "0.1"
 A full working example of this library in action.
 
 ```rust
-#[macro_use]
-extern crate log;
-
 use luno_rs::LunoClient;
 use std::env;
 
@@ -42,7 +39,7 @@ async fn main() {
     let client = LunoClient::new(api_id, api_secret).unwrap();
     let balances = client.get_balances().await.unwrap();
     for balance in balances {
-        info!("{} -> Balance: {}, Reserved: {}", balance.asset, balance.balance, balance.reserved);
+        println!("{} -> Balance: {}, Reserved: {}", balance.asset, balance.balance, balance.reserved);
     }
 }
 ```

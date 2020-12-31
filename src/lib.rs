@@ -18,41 +18,31 @@
 //!
 //! __LunoClient__
 //!
-//! ```rust
-//! #[macro_use]
-//! extern crate log;
-//!
+//! ```no_run
 //! use luno_rs::LunoClient;
 //! use std::env;
 //!
 //! #[async_std::main]
 //! async fn main() {
-//!     env_logger::builder().format_timestamp_millis().init();
-//!
 //!     let api_id = env::var("LUNO_API_ID").unwrap();
 //!     let api_secret = env::var("LUNO_API_SECRET").unwrap();
 //!
 //!     let client = LunoClient::new(api_id, api_secret).unwrap();
-//!     let balances = client.get_balances().await.unwrap();
+//!     let balances = client.list_balances().await.unwrap();
 //!     for balance in balances {
-//!         info!("{} -> Balance: {}, Reserved: {}", balance.asset, balance.balance, balance.reserved);
+//!         println!("{} -> Balance: {}, Reserved: {}", balance.asset, balance.balance, balance.reserved);
 //!     }
 //! }
 //! ```
 //!
 //! __LunoClientBuilder__
 //!
-//! ```rust
-//! #[macro_use]
-//! extern crate log;
-//!
+//! ```no_run
 //! use luno_rs::{LunoClientBuilder, CurrencyPair};
 //! use std::env;
 //!
 //! #[async_std::main]
 //! async fn main() {
-//!     env_logger::builder().format_timestamp_millis().init();
-//!
 //!     let api_id = env::var("LUNO_API_ID").unwrap();
 //!     let api_secret = env::var("LUNO_API_SECRET").unwrap();
 //!
@@ -62,7 +52,7 @@
 //!         .build()
 //!         .unwrap();
 //!     let ticker = client.get_ticker(CurrencyPair::XRPNGN).await.unwrap();
-//!     info!("{:#?}", ticker);
+//!     println!("{:#?}", ticker);
 //! }
 //! ```
 #![allow(missing_docs)]
