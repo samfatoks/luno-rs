@@ -31,8 +31,6 @@ use std::env;
 
 #[async_std::main]
 async fn main() {
-    env_logger::builder().format_timestamp_millis().init();
-
     let key_id = env::var("LUNO_KEY_ID").unwrap();
     let key_secret = env::var("LUNO_KEY_SECRET").unwrap();
 
