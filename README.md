@@ -46,9 +46,9 @@ async fn main() {
 
 We recommend using environment variables rather than including your credentials in plaintext. Run the following in Bash to export Key ID and Secret:
 
-```
-$ export LUNO_API_ID="<id>"
-$ export LUNO_API_SECRET="<secret>"
+```bash
+export LUNO_API_ID="<id>"
+export LUNO_API_SECRET="<secret>"
 ```
 
 Remember to substitute `<id>` and `<secret>` with your own Key Id and Secret.
