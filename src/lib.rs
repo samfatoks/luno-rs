@@ -11,23 +11,23 @@
 //!
 //! ```toml
 //! [dependencies]
-//! luno = "0.1"
+//! luno-rs = "0.1"
 //! ```
 //!
 //! ### Example usage
 //!
-//! __Using Client__
+//! __Using LunoClient__
 //!
 //! ```no_run
-//! use luno::Client;
+//! use luno_rs::LunoClient;
 //! use std::env;
 //!
 //! #[async_std::main]
 //! async fn main() {
-//!     let api_id = env::var("LUNO_API_ID").unwrap();
-//!     let api_secret = env::var("LUNO_API_SECRET").unwrap();
+//!     let key_id = env::var("LUNO_KEY_ID").unwrap();
+//!     let key_secret = env::var("LUNO_KEY_SECRET").unwrap();
 //!
-//!     let client = Client::new(api_id, api_secret).unwrap();
+//!     let client = LunoClient::new(key_id, key_secret);
 //!     let balances = client.list_balances().await.unwrap();
 //!     for balance in balances {
 //!         println!("{} -> Balance: {}, Reserved: {}", balance.asset, balance.balance, balance.reserved);
@@ -35,22 +35,21 @@
 //! }
 //! ```
 //!
-//! __Using ClientBuilder__
+//! __Using LunoClientBuilder__
 //!
 //! ```no_run
-//! use luno::{ClientBuilder, CurrencyPair};
+//! use luno_rs::{LunoClientBuilder, CurrencyPair};
 //! use std::env;
 //!
 //! #[async_std::main]
 //! async fn main() {
-//!     let api_id = env::var("LUNO_API_ID").unwrap();
-//!     let api_secret = env::var("LUNO_API_SECRET").unwrap();
+//!     let key_id = env::var("LUNO_KEY_ID").unwrap();
+//!     let key_secret = env::var("LUNO_KEY_SECRET").unwrap();
 //!
-//!     let client = ClientBuilder::new(api_id, api_secret)
+//!     let client = LunoClientBuilder::new(key_id, key_secret)
 //!         .with_timeout(30000)
 //!         .with_request_logger()
-//!         .build()
-//!         .unwrap();
+//!         .build();
 //!     let ticker = client.get_ticker(CurrencyPair::XRPNGN).await.unwrap();
 //!     println!("{:#?}", ticker);
 //! }
@@ -67,7 +66,7 @@ mod error;
 mod http;
 mod middleware;
 
-pub use client::{Client, ClientBuilder};
+pub use client::{LunoClient, LunoClientBuilder};
 pub use domain::{
     AccountBalance, CurrencyPair, Order, OrderBook, OrderBookEntry, OrderType, Ticker, Trade,
 };

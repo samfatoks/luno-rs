@@ -1,10 +1,10 @@
 [package]
-name = "luno"
+name = "luno-rs"
 version = "0.1.0"
-description = "Rust wrapper for Luno API"
+description = "A lightweight Rust wrapper for Luno API"
 authors = ["Samuel Fatoki <samfatoks@gmail.com>"]
 repository = "https://github.com/samfatoks/luno-rs"
-documentation = "https://docs.rs/luno"
+documentation = "https://docs.rs/luno-rs"
 keywords = ["luno", "client", "async", "crypto", "bitcoin"]
 readme = "README.md"
 license = "MIT"

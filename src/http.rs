@@ -13,8 +13,8 @@ pub struct Http {
 }
 
 impl Http {
-    pub fn new(key_id: String, secret: String) -> Result<Self, Error> {
-        let credential = Credential::new(key_id, secret);
+    pub fn new(key_id: String, key_secret: String) -> Self {
+        let credential = Credential::new(key_id, key_secret);
         let timeout = Duration::from_millis(60000);
         Http::new_with_features(credential, timeout, false)
     }
@@ -23,19 +23,18 @@ impl Http {
         credential: Credential,
         timeout: Duration,
         enable_logger_middleware: bool,
-    ) -> Result<Self, Error> {
+    ) -> Self {
         let mut client = surf::client();
         if enable_logger_middleware {
             client = client.with(Logger);
         }
 
-        client.set_base_url(Url::parse("https://api.luno.com")?);
-        let http = Http {
+        client.set_base_url(Url::parse("https://api.luno.com").unwrap());
+        Http {
             basic_auth: credential.get_basic_auth(),
             client,
             timeout,
-        };
-        Ok(http)
+        }
     }
 
     pub async fn process_request<T: DeserializeOwned, S: AsRef<str>>(

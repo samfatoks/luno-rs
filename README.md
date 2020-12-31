@@ -18,7 +18,7 @@ Put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-luno = "0.1"
+luno-rs = "0.1"
 ```
 
 ### Example usage
@@ -33,10 +33,10 @@ use std::env;
 async fn main() {
     env_logger::builder().format_timestamp_millis().init();
 
-    let api_id = env::var("LUNO_API_ID").unwrap();
-    let api_secret = env::var("LUNO_API_SECRET").unwrap();
+    let key_id = env::var("LUNO_KEY_ID").unwrap();
+    let key_secret = env::var("LUNO_KEY_SECRET").unwrap();
 
-    let client = LunoClient::new(api_id, api_secret).unwrap();
+    let client = LunoClient::new(key_id, key_secret).unwrap();
     let balances = client.get_balances().await.unwrap();
     for balance in balances {
         println!("{} -> Balance: {}, Reserved: {}", balance.asset, balance.balance, balance.reserved);
@@ -47,8 +47,8 @@ async fn main() {
 We recommend using environment variables rather than including your credentials in plaintext. Run the following in Bash to export Key ID and Secret:
 
 ```bash
-export LUNO_API_ID="<id>"
-export LUNO_API_SECRET="<secret>"
+export LUNO_KEY_ID="<id>"
+export LUNO_KEY_SECRET="<secret>"
 ```
 
 Remember to substitute `<id>` and `<secret>` with your own Key Id and Secret.
